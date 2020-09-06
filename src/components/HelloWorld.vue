@@ -9,8 +9,8 @@
         </v-btn>
       </v-toolbar>
       <v-card-text>
-        <editor v-if="editMode" v-model="text"></editor>
-        <viewer v-else :value="text"></viewer>
+        <editor v-if="editMode" :initialValue="text"></editor>
+        <viewer v-else :initialValue="text"></viewer>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -35,7 +35,7 @@ export default {
   data () {
     return {
       editMode: true,
-      text: ''
+      text: 'this is initialvalue.'
     }
   },
   methods: {
@@ -51,6 +51,7 @@ export default {
       const r = dialog.showOpenDialogSync(options)
       if (!r) return
       this.text = fs.readFileSync(r[0]).toString()
+      console.log(this.text)
     },
     write () {
       const options = {
@@ -64,7 +65,6 @@ export default {
       const r = dialog.showSaveDialogSync(options)
       if (!r) return
       fs.writeFileSync(r, this.text)
-      console.log(r)
     }
   }
 }
