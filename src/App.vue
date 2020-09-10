@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import HelloWorld from './views/FileRename'
+import HelloWorld from './views/File2DB'
 
 export default {
   name: 'App',
