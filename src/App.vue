@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import HelloWorld from './views/Diary'
+import HelloWorld from './views/FileRename'
 
 export default {
   name: 'App',
