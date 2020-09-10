@@ -17,7 +17,11 @@
             {{ item.updatedAt.toLocaleString() }}
           </template>
           <template v-slot:item.title="{ item }">
-            <a @click="dialogEditOpen(item)">{{ item.title }}</a>
+            <a @click="dialogReadOpen(item)">{{ item.title }}</a>
+          </template>
+          <template v-slot:item._id="{ item }">
+            <v-btn @click="dialogEditOpen(item)" icon><v-icon>mdi-pencil</v-icon></v-btn>
+            <v-btn @click="del(item)" icon><v-icon>mdi-delete</v-icon></v-btn>
           </template>
         </v-data-table>
       </v-card-text>
@@ -50,10 +54,9 @@
     </v-dialog>
     <v-dialog v-model="dialogRead">
       <v-card>
-        <v-card-title>글 보기</v-card-title>
+        <v-card-title>{{ select.title }}</v-card-title>
         <v-card-text>
-          <v-text-field label="제목" v-model="title"></v-text-field>
-          <v-textarea v-model="content"></v-textarea>
+          <v-textarea v-model="select.content"></v-textarea>
         </v-card-text>
         <!-- <v-card-actions>
                 <v-btn>lll</v-btn>
@@ -78,10 +81,14 @@ export default {
       headers: [
         { value: 'createdAt', text: '작성일' },
         { value: 'updatedAt', text: '수정일' },
-        { value: 'title', text: '제목' }
+        { value: 'title', text: '제목' },
+        { value: '_id', text: 'actions' }
       ],
       items: [],
-      select: null
+      select: {
+        title: '',
+        content: ''
+      }
     }
   },
   async mounted () {
@@ -105,6 +112,14 @@ export default {
       this.select = item
       this.dialogEdit = true
     },
+    async dialogReadOpen (item) {
+      this.title = item.title
+      const dc = await DiaryContent.findOne({ _id: item._content })
+      this.content = dc.content
+      this.select = item
+      this.select.content = this.content
+      this.dialogRead = true
+    },
     async add () {
       const dc = await DiaryContent.insert({ content: this.content })
       await Diary.insert({
@@ -118,7 +133,6 @@ export default {
     },
     async list () {
       this.items = await Diary.find()
-      console.log(this.items)
     },
     async update () {
       await DiaryContent.update({ _id: this.select._content }, { $set: { content: this.content } })
@@ -134,8 +148,10 @@ export default {
       this.dialogEdit = false
       await this.list()
     },
-    del () {
-
+    async del (item) {
+      await DiaryContent.remove({ _id: item._content })
+      await Diary.remove({ _id: item._id })
+      await this.list()
     }
   }
 }
