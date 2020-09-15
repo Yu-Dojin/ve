@@ -37,20 +37,24 @@
       </v-btn>
     </v-app-bar>
 
-    <v-main>
-      <HelloWorld/>
-    </v-main>
+    <!-- <v-main>
+      <router-view/>
+    </v-main> -->
+
+    <v-content>
+      <router-view/>
+    </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './views/File2DB'
+// import HelloWorld from './views/File2DB'
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld
+    // HelloWorld
   },
 
   data: () => ({
